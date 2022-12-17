@@ -27,9 +27,11 @@ class LinkTemplatesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('clear-up')) {
-            exec('ls /srv/app/public | grep -xv "index.php" | cd /srv/app/public && xargs rm -rf');
+            // remove all files (links) except index.php (required by symfony) 
+            exec('cd /srv/app/public && ls | grep -xv "index.php" | xargs rm -rf && cd /srv/app');
         }
 
+        // build links to templates, make it public
         exec('cd /srv/app/public && ln -s ../templates/* .');
 
         return Command::SUCCESS;
